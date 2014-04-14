@@ -1,0 +1,11 @@
+#IntelliJ IDEA
+.idea
+*.iml
+*.ipr
+*.iws
+/classes
+
+#Other
+.DS_Store
+tmp
+/local.properties
