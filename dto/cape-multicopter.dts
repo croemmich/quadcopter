@@ -1,0 +1,83 @@
+/*
+ * Copyright (C) 2014 Chris Roemmich
+ * Copyright (C) 2013 Texas Instruments
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 2 as
+ * published by the Free Software Foundation.
+ */
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "ti,beaglebone", "ti,beaglebone-black";
+
+	part-number = "cape-multicopter";
+	version = "00A0";
+
+	exclusive-use = "P8.34", "P8.36", "P8.45", "P8.46", "ehrpwm1A", "ehrpwm1B", "ehrpwm2A", "ehrpwm2B";
+
+	fragment@0 {
+		target = <&am33xx_pinmux>;
+		__overlay__ {
+			multicopter_pwm_m1: pinmux_multicopter_pwm_m1_pins {
+                                pinctrl-single,pins = <0x0cc  0x2>; /* P8_34 (ZCZ ball U4) | MODE 2 */
+                        };
+                        multicopter_pwm_m2: pinmux_multicopter_pwm_m2_pins {
+                                pinctrl-single,pins = <0x0c8  0x2>; /* P8_36 (ZCZ ball U3) | MODE 2 */
+                        };
+			multicopter_pwm_m3: pinmux_multicopter_pwm_m3_pins {
+				pinctrl-single,pins = <0x0a0  0x3>; /* P8_45 (ZCZ ball R1) | MODE 3 */
+			};
+			multicopter_pwm_m4: pinmux_multicopter_pwm_m4_pins {
+                                pinctrl-single,pins = <0x0a4  0x3>; /* P8_46 (ZCZ ball R2) | MODE 3 */
+                        };
+		};
+	};
+
+	fragment@1 {
+		target = <&ocp>;
+		__overlay__ {
+			 multicopter_pwm_m1 {
+                                compatible      = "pwm_test";
+                                pwms            = <&ehrpwm1 1 400000 1>;
+                                pwm-names       = "Multicopter_PWM_M1";
+                                pinctrl-names   = "default";
+                                pinctrl-0       = <&multicopter_pwm_m1>;
+                                enabled         = <1>;
+                                duty            = <0>;
+                                status          = "okay";
+                        };
+                        multicopter_pwm_m2 {
+                                compatible      = "pwm_test";
+                                pwms            = <&ehrpwm1 0 400000 1>;
+                                pwm-names       = "Multicopter_PWM_M2";
+                                pinctrl-names   = "default";
+                                pinctrl-0       = <&multicopter_pwm_m2>;
+                                enabled         = <1>;
+                                duty            = <0>;
+                                status          = "okay";
+                        };
+			multicopter_pwm_m3 {
+				compatible	= "pwm_test";
+				pwms 		= <&ehrpwm2 0 400000 1>;
+				pwm-names 	= "Multicopter_PWM_M3";
+				pinctrl-names	= "default";
+				pinctrl-0	= <&multicopter_pwm_m3>;
+				enabled		= <1>;
+				duty		= <0>;
+				status 		= "okay";
+			};
+			multicopter_pwm_m4 {
+                                compatible      = "pwm_test";
+                                pwms            = <&ehrpwm2 1 400000 1>;
+                                pwm-names       = "Multicopter_PWM_M4";
+                                pinctrl-names   = "default";
+                                pinctrl-0       = <&multicopter_pwm_m4>;
+                                enabled         = <1>;
+                                duty            = <0>;
+                                status          = "okay";
+                        };
+		};
+	};
+};
