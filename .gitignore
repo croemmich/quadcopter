@@ -9,3 +9,5 @@
 .DS_Store
 tmp
 /local.properties
+/.nb-gradle/private/
+/build/

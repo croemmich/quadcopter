@@ -1,4 +1,4 @@
-package com.logicalgrape.quadcopter;
+package quadcopter;
 
 public class Contstants {
 

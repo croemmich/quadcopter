@@ -1,4 +1,4 @@
-package com.logicalgrape.quadcopter.input;
+package quadcopter.io;
 
 public interface Magnetometer {
 

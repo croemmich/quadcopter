@@ -1,6 +1,6 @@
-package com.logicalgrape.quadcopter.input;
+package quadcopter.io;
 
-public interface Altimeter {
+public interface Altimeter extends Device {
 
     /**
      * @return the altitude in meters

@@ -1,4 +1,4 @@
-package com.logicalgrape.quadcopter;
+package quadcopter;
 
 import de.taimos.daemon.DaemonLifecycleAdapter;
 import de.taimos.daemon.DaemonStarter;

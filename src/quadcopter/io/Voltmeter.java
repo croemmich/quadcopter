@@ -1,6 +1,6 @@
-package com.logicalgrape.quadcopter.input;
+package quadcopter.io;
 
-public interface Voltmeter {
+public interface Voltmeter extends Device {
 
     /**
      * @return the voltage in volts

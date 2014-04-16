@@ -1,7 +1,9 @@
 apply plugin: 'java'
+apply plugin: 'application'
 
 version = '0.1.0'
 sourceCompatibility = '1.7'
+mainClassName = "quadcopter.Quadcopter"
 
 repositories {
     mavenCentral()
@@ -19,6 +21,6 @@ dependencies {
 
 jar {
     manifest {
-        attributes 'Main-Class': 'com.logicalgrape.quadcopter.QuadcopterDaemon'
+        attributes 'Main-Class': 'quadcopter.Quadcopter'
     }
 }

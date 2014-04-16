@@ -1,6 +1,10 @@
-package com.logicalgrape.quadcopter.input;
+package quadcopter.io.devices;
+
+import quadcopter.io.Magnetometer;
 
 public class HMC5883L implements Magnetometer {
+
+    public static final int ADDRESS = 30;
 
     public double getHeading() {
         return 0;

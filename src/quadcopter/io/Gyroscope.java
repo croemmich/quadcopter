@@ -1,6 +1,6 @@
-package com.logicalgrape.quadcopter.input;
+package quadcopter.io;
 
-public interface Gyroscope {
+public interface Gyroscope extends Device {
 
     /**
      * @return the x value in degrees/s

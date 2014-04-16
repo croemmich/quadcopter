@@ -1,6 +1,6 @@
-package com.logicalgrape.quadcopter.input;
+package quadcopter.io;
 
-public interface Barometer {
+public interface Barometer extends Device {
 
     /**
      * @return the pressure in hPa
