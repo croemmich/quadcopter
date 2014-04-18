@@ -210,7 +210,12 @@ public class I2CDeviceImpl implements I2CDevice {
         }
         return ret;
     }
-    
+
+    @Override
+    public int getAddress() {
+        return deviceAddress;
+    }
+
     /**
      * This helper method creates a string describing bus file name and device address (in hex).
      * 

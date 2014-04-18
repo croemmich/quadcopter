@@ -3,23 +3,6 @@ package quadcopter;
 public class Contstants {
 
     /**
-     * Earth's gravity in m/s^2
-     */
-    public static double GRAVITY_EARTH = 9.80665;
-
-    /**
-     * The moon's gravity in m/s^2
-     */
-    public static double GRAVITY_MOON = 1.6;
-
-    /**
-     * The sun's gravity in m/s^2
-     */
-    public static double GRAVITY_SUN = 275.0F;
-
-    public static double GRAVITY = GRAVITY_EARTH;
-
-    /**
      * Maximum magnetic field on Earth's surface
      */
     public static double MAGFIELD_EARTH_MAX = 60.0;

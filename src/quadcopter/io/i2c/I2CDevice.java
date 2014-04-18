@@ -124,4 +124,9 @@ public interface I2CDevice {
      * @throws IOException thrown in case byte cannot be read from the i2c device or i2c bus
      */
     int read(int address, byte[] buffer, int offset, int size) throws IOException;
+
+    /**
+     * @return the I2C address of the device.
+     */
+    int getAddress();
 }
