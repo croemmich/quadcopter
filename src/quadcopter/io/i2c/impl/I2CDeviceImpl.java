@@ -36,22 +36,25 @@ import java.io.IOException;
 /**
  * Implementation of i2c device. This class only holds reference to i2c bus (so it can use its handle) and
  * device address.
- * 
- * @author Daniel Sendula
  *
+ * @author Daniel Sendula
  */
 public class I2CDeviceImpl implements I2CDevice {
 
-    /** Reference to i2c bus */
+    /**
+     * Reference to i2c bus
+     */
     private I2CBusImpl bus;
-    
-    /** I2c device address */
+
+    /**
+     * I2c device address
+     */
     private int deviceAddress;
-    
+
     /**
      * Constructor.
-     * 
-     * @param bus i2c bus
+     *
+     * @param bus     i2c bus
      * @param address i2c device address
      */
     public I2CDeviceImpl(I2CBusImpl bus, int address) {
@@ -60,10 +63,9 @@ public class I2CDeviceImpl implements I2CDevice {
     }
 
     /**
-     * This method writes one byte to i2c device. 
-     * 
+     * This method writes one byte to i2c device.
+     *
      * @param data byte to be written
-     * 
      * @throws IOException thrown in case byte cannot be written to the i2c device or i2c bus
      */
     @Override
@@ -76,16 +78,15 @@ public class I2CDeviceImpl implements I2CDevice {
 
     /**
      * This method writes several bytes to the i2c device from given buffer at given offset.
-     * 
+     *
      * @param buffer buffer of data to be written to the i2c device in one go
-     * @param offset offset in buffer 
-     * @param size number of bytes to be written 
-     * 
+     * @param offset offset in buffer
+     * @param size   number of bytes to be written
      * @throws IOException thrown in case byte cannot be written to the i2c device or i2c bus
      */
     @Override
     public void write(byte[] buffer, int offset, int size) throws IOException {
-        
+
         int ret = I2C.i2cWriteBytesDirect(bus.fd, deviceAddress, size, offset, buffer);
         if (ret < 0) {
             throw new IOException("Error writing to " + makeDescription() + ". Got " + ret + ".");
@@ -93,11 +94,10 @@ public class I2CDeviceImpl implements I2CDevice {
     }
 
     /**
-     * This method writes one byte to i2c device. 
-     * 
+     * This method writes one byte to i2c device.
+     *
      * @param address local address in the i2c device
-     * @param data byte to be written
-     * 
+     * @param data    byte to be written
      * @throws IOException thrown in case byte cannot be written to the i2c device or i2c bus
      */
     @Override
@@ -110,17 +110,16 @@ public class I2CDeviceImpl implements I2CDevice {
 
     /**
      * This method writes several bytes to the i2c device from given buffer at given offset.
-     * 
+     *
      * @param address local address in the i2c device
-     * @param buffer buffer of data to be written to the i2c device in one go
-     * @param offset offset in buffer 
-     * @param size number of bytes to be written 
-     * 
+     * @param buffer  buffer of data to be written to the i2c device in one go
+     * @param offset  offset in buffer
+     * @param size    number of bytes to be written
      * @throws IOException thrown in case byte cannot be written to the i2c device or i2c bus
      */
     @Override
     public void write(int address, byte[] buffer, int offset, int size) throws IOException {
-        
+
         int ret = I2C.i2cWriteBytes(bus.fd, deviceAddress, address, size, offset, buffer);
         if (ret < 0) {
             throw new IOException("Error writing to " + makeDescription(address) + ". Got " + ret + ".");
@@ -129,9 +128,8 @@ public class I2CDeviceImpl implements I2CDevice {
 
     /**
      * This method reads one byte from the i2c device. Result is between -128 and 127.
-     * 
+     *
      * @return
-     * 
      * @throws IOException thrown in case byte cannot be read from the i2c device or i2c bus
      */
     @Override
@@ -145,17 +143,15 @@ public class I2CDeviceImpl implements I2CDevice {
 
     /**
      * <p>This method reads bytes from the i2c device to given buffer at asked offset. </p>
-     * 
-     * <p>Note: Current implementation calls {@link #read(int)}. That means for each read byte 
+     * <p/>
+     * <p>Note: Current implementation calls {@link #read(int)}. That means for each read byte
      * i2c bus will send (next) address to i2c device.
      * </p>
-     * 
+     *
      * @param buffer buffer of data to be read from the i2c device in one go
-     * @param offset offset in buffer 
-     * @param size number of bytes to be read 
-     * 
+     * @param offset offset in buffer
+     * @param size   number of bytes to be read
      * @return number of bytes read
-     * 
      * @throws IOException thrown in case byte cannot be read from the i2c device or i2c bus
      */
     @Override
@@ -170,10 +166,9 @@ public class I2CDeviceImpl implements I2CDevice {
 
     /**
      * This method reads one byte from the i2c device. Result is between -128 and 127.
-     * 
+     *
      * @param address local address in the i2c device
      * @return
-     * 
      * @throws IOException thrown in case byte cannot be read from the i2c device or i2c bus
      */
     @Override
@@ -187,18 +182,16 @@ public class I2CDeviceImpl implements I2CDevice {
 
     /**
      * <p>This method reads bytes from the i2c device to given buffer at asked offset. </p>
-     * 
-     * <p>Note: Current implementation calls {@link #read(int)}. That means for each read byte 
+     * <p/>
+     * <p>Note: Current implementation calls {@link #read(int)}. That means for each read byte
      * i2c bus will send (next) address to i2c device.
      * </p>
-     * 
+     *
      * @param address local address in the i2c device
-     * @param buffer buffer of data to be read from the i2c device in one go
-     * @param offset offset in buffer 
-     * @param size number of bytes to be read 
-     * 
+     * @param buffer  buffer of data to be read from the i2c device in one go
+     * @param offset  offset in buffer
+     * @param size    number of bytes to be read
      * @return number of bytes read
-     * 
      * @throws IOException thrown in case byte cannot be read from the i2c device or i2c bus
      */
     @Override
@@ -218,23 +211,23 @@ public class I2CDeviceImpl implements I2CDevice {
 
     /**
      * This helper method creates a string describing bus file name and device address (in hex).
-     * 
+     *
      * @return string with all details
      */
     protected String makeDescription() {
         return bus.filename + " at address 0x" + Integer.toHexString(deviceAddress);
     }
-    
+
     /**
      * This helper method creates a string describing bus file name, device address (in hex)
      * and local i2c address.
-     * 
+     *
      * @param address local address in i2c device
      * @return string with all details
      */
     protected String makeDescription(int address) {
-        return bus.filename + " at address 0x" + Integer.toHexString(deviceAddress) 
+        return bus.filename + " at address 0x" + Integer.toHexString(deviceAddress)
                 + " to address 0x" + Integer.toHexString(address);
     }
-    
+
 }

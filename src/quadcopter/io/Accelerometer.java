@@ -1,18 +1,18 @@
 package quadcopter.io;
 
-import quadcopter.model.Gravity;
-import quadcopter.model.Gravity3D;
-
+import javax.measure.Measure;
+import javax.measure.VectorMeasure;
+import javax.measure.quantity.Acceleration;
 import java.io.IOException;
 
 public interface Accelerometer extends Device {
 
-    public Gravity readX() throws IOException;
+    public Measure<Double, Acceleration> readX() throws IOException;
 
-    public Gravity readY() throws IOException;
+    public Measure<Double, Acceleration> readY() throws IOException;
 
-    public Gravity readZ() throws IOException;
+    public Measure<Double, Acceleration> readZ() throws IOException;
 
-    public Gravity3D read3D() throws IOException;
+    public VectorMeasure<Acceleration> readVector() throws IOException;
 
 }

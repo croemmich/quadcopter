@@ -1,6 +1,5 @@
 package quadcopter.io.devices;
 
-import quadcopter.Contstants;
 import quadcopter.io.Altimeter;
 import quadcopter.io.Barometer;
 import quadcopter.io.Thermometer;
@@ -27,7 +26,7 @@ public class BMP085 implements Barometer, Thermometer, Altimeter {
     public static final int REG_CTRL = 0xF4;
     public static final int REG_DATA = 0xF6;
     public static final byte CMD_TEMP = 0x2E;
-    public static final byte CMD_PRESSURE = (byte) 0x34;
+    public static final byte CMD_PRESSURE = 0x34;
 
     public static final byte MODE_LOW = 0;
     public static final byte MODE_STD = 1;
@@ -85,7 +84,7 @@ public class BMP085 implements Barometer, Thermometer, Altimeter {
         Measure<Double, Pressure> pressure = readPressure();
         double temperature = readCompensatedTemperature(false);
 
-        double altitude = ((Math.pow(Contstants.PRESSURE_SEALEVEL / (pressure.getValue() / 100), 0.190223) - 1.0) * (temperature + 273.15)) / 0.0065;
+        double altitude = ((Math.pow(1013.25 / (pressure.getValue() / 100), 0.190223) - 1.0) * (temperature + 273.15)) / 0.0065;
 
         return Measure.valueOf(altitude, METER);
     }
@@ -166,7 +165,6 @@ public class BMP085 implements Barometer, Thermometer, Altimeter {
 
     private short readUncompensatedTemperature(boolean fresh) throws IOException {
         if (fresh || cacheUTExpires < System.currentTimeMillis()) {
-            System.out.println("Updating Temp Cache");
             device.write(REG_CTRL, CMD_TEMP);
 
             try {

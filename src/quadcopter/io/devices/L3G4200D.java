@@ -3,11 +3,8 @@ package quadcopter.io.devices;
 import quadcopter.io.Gyroscope;
 import quadcopter.io.i2c.I2CBus;
 import quadcopter.io.i2c.I2CDevice;
-import quadcopter.model.Vector;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 public class L3G4200D implements Gyroscope {
 
@@ -85,24 +82,24 @@ public class L3G4200D implements Gyroscope {
 
     }
 
-    public Vector<Short> getRawVector() throws IOException {
-        byte[] data = new byte[6];
-        device.read(REG_X_LOW, data, 0, 6);
-
-        ByteBuffer bb = ByteBuffer.allocate(data.length);
-        bb.order(ByteOrder.LITTLE_ENDIAN);
-        bb.put(data);
-
-        return new Vector<>(bb.getShort(0), bb.getShort(2), bb.getShort(4));
-    }
-
-    public Vector<Float> getVector() throws IOException {
-        Vector<Short> raw = getRawVector();
-
-        double f = raw.x * DPS_DIGIT_2000;
-
-        return new Vector<Float>(raw.x * DPS_DIGIT_2000, raw.y * DPS_DIGIT_2000, raw.z * DPS_DIGIT_2000);
-    }
+//    public Vector<Short> getRawVector() throws IOException {
+//        byte[] data = new byte[6];
+//        device.read(REG_X_LOW, data, 0, 6);
+//
+//        ByteBuffer bb = ByteBuffer.allocate(data.length);
+//        bb.order(ByteOrder.LITTLE_ENDIAN);
+//        bb.put(data);
+//
+//        return new Vector<>(bb.getShort(0), bb.getShort(2), bb.getShort(4));
+//    }
+//
+//    public Vector<Float> getVector() throws IOException {
+//        Vector<Short> raw = getRawVector();
+//
+//        double f = raw.x * DPS_DIGIT_2000;
+//
+//        return new Vector<Float>(raw.x * DPS_DIGIT_2000, raw.y * DPS_DIGIT_2000, raw.z * DPS_DIGIT_2000);
+//    }
 
     @Override
     public double getX() {

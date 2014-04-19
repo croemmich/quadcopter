@@ -44,13 +44,12 @@ public class I2CFactory {
     private I2CFactory() {
         // forbid object construction 
     }
-    
+
     /**
      * Create new I2CBus instance
-     * 
+     *
      * @return Return a new I2CBus impl instance.
-     * 
-     * @throws IOException 
+     * @throws IOException
      */
     public static I2CBus getInstance(int busNumber) throws IOException {
         return I2CBusImpl.getBus(busNumber);

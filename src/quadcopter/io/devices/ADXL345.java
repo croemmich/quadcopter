@@ -3,9 +3,11 @@ package quadcopter.io.devices;
 import quadcopter.io.Accelerometer;
 import quadcopter.io.i2c.I2CBus;
 import quadcopter.io.i2c.I2CDevice;
-import quadcopter.model.Gravity;
-import quadcopter.model.Gravity3D;
 
+import javax.measure.Measure;
+import javax.measure.VectorMeasure;
+import javax.measure.quantity.Acceleration;
+import javax.measure.unit.NonSI;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -94,7 +96,7 @@ public class ADXL345 implements Accelerometer {
         device.write(REG_POWER_CTL, (byte) 0x00);
     }
 
-    public Gravity3D read3D() throws IOException {
+    public VectorMeasure<Acceleration> readVector() throws IOException {
         byte[] data = new byte[6];
         device.read(REG_DATAX0, data, 0, 6);
 
@@ -102,26 +104,26 @@ public class ADXL345 implements Accelerometer {
         bb.order(ByteOrder.LITTLE_ENDIAN);
         bb.put(data);
 
-        double x = bb.getShort(0) + CAL_X;
-        double y = bb.getShort(2) + CAL_Y;
-        double z = bb.getShort(4) + CAL_Z;
+        double x = ((double) (bb.getShort(0) + CAL_X)) / SENSITIVITY_X;
+        double y = ((double) (bb.getShort(2) + CAL_Y)) / SENSITIVITY_Y;
+        double z = ((double) (bb.getShort(4) + CAL_Z)) / SENSITIVITY_Z;
 
-        return new Gravity3D(x / SENSITIVITY_X, y / SENSITIVITY_Y, z / SENSITIVITY_Z);
+        return VectorMeasure.valueOf(x, y, z, NonSI.G);
     }
 
-    public Gravity readX() throws IOException {
-        return readAcceleration(REG_DATAX0, CAL_X, SENSITIVITY_X);
+    public Measure<Double, Acceleration> readX() throws IOException {
+        return read(REG_DATAX0, CAL_X, SENSITIVITY_X);
     }
 
-    public Gravity readY() throws IOException {
-        return readAcceleration(REG_DATAY0, CAL_Y, SENSITIVITY_Y);
+    public Measure<Double, Acceleration> readY() throws IOException {
+        return read(REG_DATAY0, CAL_Y, SENSITIVITY_Y);
     }
 
-    public Gravity readZ() throws IOException {
-        return readAcceleration(REG_DATAZ0, CAL_Z, SENSITIVITY_Z);
+    public Measure<Double, Acceleration> readZ() throws IOException {
+        return read(REG_DATAZ0, CAL_Z, SENSITIVITY_Z);
     }
 
-    private Gravity readAcceleration(int reg, double cal, double sensitivity) throws IOException {
+    private Measure<Double, Acceleration> read(int reg, double cal, double sensitivity) throws IOException {
         byte[] data = new byte[2];
         device.read(reg, data, 0, 2);
 
@@ -129,9 +131,9 @@ public class ADXL345 implements Accelerometer {
         bb.order(ByteOrder.LITTLE_ENDIAN);
         bb.put(data);
 
-        double gravity = bb.getShort(0) + cal;
+        double gravity = (bb.getShort(0) + cal) / sensitivity;
 
-        return new Gravity(gravity / sensitivity);
+        return Measure.valueOf(gravity, NonSI.G);
     }
 
 }

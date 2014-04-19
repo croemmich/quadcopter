@@ -1,6 +1,5 @@
 package quadcopter;
 
-import quadcopter.io.devices.BMP085;
 import quadcopter.io.i2c.I2CBus;
 import quadcopter.io.i2c.I2CFactory;
 
@@ -27,11 +26,8 @@ public class Quadcopter {
         try {
             I2CBus bus = I2CFactory.getInstance(I2CBus.BUS_1);
 
-            BMP085 barometer = new BMP085(bus);
-            barometer.start();
-
             while (true) {
-                System.out.println(barometer.readAltitude() + " " + barometer.readPressure() + " " + barometer.readTemperature());
+
                 Thread.sleep(1000);
             }
         } catch (Exception e) {
