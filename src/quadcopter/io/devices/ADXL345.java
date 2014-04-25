@@ -48,13 +48,13 @@ public class ADXL345 implements Accelerometer {
     public static final int REG_FIFO_CTL = 0x38;
     public static final int REG_FIFO_STATUS = 0x39;
 
-    private int CAL_X = 120;
-    private int CAL_Y = 162;
-    private int CAL_Z = -732;
+    private int CAL_X = 114;
+    private int CAL_Y = 159;
+    private int CAL_Z = -738;
 
-    private int SENSITIVITY_X = 316;
-    private int SENSITIVITY_Y = 310;
-    private int SENSITIVITY_Z = 250;
+    private int SENSITIVITY_X = 305;
+    private int SENSITIVITY_Y = 296;
+    private int SENSITIVITY_Z = 243;
 
     private final I2CDevice device;
 
