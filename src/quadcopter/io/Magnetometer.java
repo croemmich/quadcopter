@@ -1,18 +1,29 @@
 package quadcopter.io;
 
-import javax.measure.Measure;
-import javax.measure.VectorMeasure;
-import javax.measure.quantity.MagneticFluxDensity;
+import quadcopter.model.Vector;
+
 import java.io.IOException;
 
 public interface Magnetometer extends Device {
 
-    public VectorMeasure<MagneticFluxDensity> readVector() throws IOException;
+    /**
+     * @return a 3D vector of tesla values
+     */
+    public Vector<Double> readVector() throws IOException;
 
-    public Measure<Double, MagneticFluxDensity> readX() throws IOException;
+    /**
+     * @return the x value in tesla
+     */
+    public double readX() throws IOException;
 
-    public Measure<Double, MagneticFluxDensity> readY() throws IOException;
+    /**
+     * @return the y value in tesla
+     */
+    public double readY() throws IOException;
 
-    public Measure<Double, MagneticFluxDensity> readZ() throws IOException;
+    /**
+     * @return the z value in tesla
+     */
+    public double readZ() throws IOException;
 
 }

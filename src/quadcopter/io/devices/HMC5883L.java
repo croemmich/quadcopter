@@ -1,13 +1,11 @@
 package quadcopter.io.devices;
 
+import quadcopter.io.Constants;
 import quadcopter.io.Magnetometer;
 import quadcopter.io.i2c.I2CBus;
 import quadcopter.io.i2c.I2CDevice;
+import quadcopter.model.Vector;
 
-import javax.measure.Measure;
-import javax.measure.VectorMeasure;
-import javax.measure.quantity.MagneticFluxDensity;
-import javax.measure.unit.NonSI;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -78,7 +76,7 @@ public class HMC5883L implements Magnetometer {
         device.write(REG_MODE, MODE_IDLE);
     }
 
-    public VectorMeasure<MagneticFluxDensity> readVector() throws IOException {
+    public Vector<Double> readVector() throws IOException {
         byte[] data = new byte[6];
         device.read(REG_DATA_X_MSB, data, 0, 6);
 
@@ -90,22 +88,22 @@ public class HMC5883L implements Magnetometer {
         double z = bb.getShort(2) * resolution;
         double y = bb.getShort(4) * resolution;
 
-        return VectorMeasure.valueOf(x, y, z, NonSI.GAUSS);
+        return new Vector<>(x * Constants.GAUSS_TO_TESLA, y * Constants.GAUSS_TO_TESLA, z * Constants.GAUSS_TO_TESLA);
     }
 
-    public Measure<Double, MagneticFluxDensity> readX() throws IOException {
+    public double readX() throws IOException {
         return read2D(REG_DATA_X_MSB);
     }
 
-    public Measure<Double, MagneticFluxDensity> readY() throws IOException {
+    public double readY() throws IOException {
         return read2D(REG_DATA_Y_MSB);
     }
 
-    public Measure<Double, MagneticFluxDensity> readZ() throws IOException {
+    public double readZ() throws IOException {
         return read2D(REG_DATA_Z_MSB);
     }
 
-    private Measure<Double, MagneticFluxDensity> read2D(int register) throws IOException {
+    private double read2D(int register) throws IOException {
         byte[] data = new byte[2];
         device.read(register, data, 0, 2);
 
@@ -114,8 +112,7 @@ public class HMC5883L implements Magnetometer {
         bb.put(data);
 
         double value = bb.getShort(0) * resolution;
-
-        return Measure.valueOf(value, NonSI.GAUSS);
+        return value * Constants.GAUSS_TO_TESLA;
     }
 
 }

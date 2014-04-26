@@ -2,19 +2,14 @@ package quadcopter.io.devices;
 
 import quadcopter.io.Altimeter;
 import quadcopter.io.Barometer;
+import quadcopter.io.Constants;
 import quadcopter.io.Thermometer;
 import quadcopter.io.i2c.I2CBus;
 import quadcopter.io.i2c.I2CDevice;
 
-import javax.measure.Measure;
-import javax.measure.quantity.Length;
-import javax.measure.quantity.Pressure;
-import javax.measure.quantity.Temperature;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-
-import static javax.measure.unit.SI.*;
 
 public class BMP085 implements Barometer, Thermometer, Altimeter {
 
@@ -80,17 +75,15 @@ public class BMP085 implements Barometer, Thermometer, Altimeter {
     }
 
     @Override
-    public Measure<Double, Length> readAltitude() throws IOException {
-        Measure<Double, Pressure> pressure = readPressure();
+    public double readAltitude() throws IOException {
+        double pressure = readPressure();
         double temperature = readCompensatedTemperature(false);
 
-        double altitude = ((Math.pow(1013.25 / (pressure.getValue() / 100), 0.190223) - 1.0) * (temperature + 273.15)) / 0.0065;
-
-        return Measure.valueOf(altitude, METER);
+        return ((Math.pow(Constants.PRESSURE_SEALEVEL_HPA / (pressure), 0.190223) - 1.0) * (temperature + 273.15)) / 0.0065;
     }
 
     @Override
-    public Measure<Double, Pressure> readPressure() throws IOException {
+    public double readPressure() throws IOException {
         int up = readUncompensatedPressure();
         short ut = readUncompensatedTemperature(false);
 
@@ -124,12 +117,12 @@ public class BMP085 implements Barometer, Thermometer, Altimeter {
         x2 = (-7357 * pressure) >> 16;
         pressure += ((x1 + x2 + 3791) >> 4);
 
-        return Measure.valueOf((double) pressure, PASCAL);
+        return pressure / 100;
     }
 
     @Override
-    public Measure<Double, Temperature> readTemperature() throws IOException {
-        return Measure.valueOf(readCompensatedTemperature(true), CELSIUS);
+    public double readTemperature() throws IOException {
+        return readCompensatedTemperature(true);
     }
 
     private double readCompensatedTemperature(boolean fresh) throws IOException {

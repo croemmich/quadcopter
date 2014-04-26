@@ -7,9 +7,6 @@ mainClassName = "quadcopter.Quadcopter"
 
 repositories {
     mavenCentral()
-    maven {
-        url "https://artifacts.unidata.ucar.edu/content/repositories/unidata-releases"
-    }
 }
 
 sourceSets {
@@ -18,23 +15,12 @@ sourceSets {
 }
 
 dependencies {
-    compile 'org.jscience:jscience:4.3.1'
     compile 'de.taimos:daemon-framework:1.5'
     testCompile 'junit:junit:4.11'
 }
 
 jar {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    manifest {
-        attributes 'Main-Class': 'quadcopter.Quadcopter'
-    }
-}
-
-task uberjar(type: Jar) {
-    from files(sourceSets.main.output.classesDir)
-    from files(sourceSets.main.output.resourcesDir)
-    from {configurations.compile.collect {zipTree(it)}}
-
     manifest {
         attributes 'Main-Class': 'quadcopter.Quadcopter'
     }

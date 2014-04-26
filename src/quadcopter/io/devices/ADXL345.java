@@ -1,13 +1,11 @@
 package quadcopter.io.devices;
 
 import quadcopter.io.Accelerometer;
+import quadcopter.io.Constants;
 import quadcopter.io.i2c.I2CBus;
 import quadcopter.io.i2c.I2CDevice;
+import quadcopter.model.Vector;
 
-import javax.measure.Measure;
-import javax.measure.VectorMeasure;
-import javax.measure.quantity.Acceleration;
-import javax.measure.unit.NonSI;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -96,7 +94,7 @@ public class ADXL345 implements Accelerometer {
         device.write(REG_POWER_CTL, (byte) 0x00);
     }
 
-    public VectorMeasure<Acceleration> readVector() throws IOException {
+    public Vector<Double> readVector() throws IOException {
         byte[] data = new byte[6];
         device.read(REG_DATAX0, data, 0, 6);
 
@@ -108,22 +106,22 @@ public class ADXL345 implements Accelerometer {
         double y = ((double) (bb.getShort(2) + CAL_Y)) / SENSITIVITY_Y;
         double z = ((double) (bb.getShort(4) + CAL_Z)) / SENSITIVITY_Z;
 
-        return VectorMeasure.valueOf(x, y, z, NonSI.G);
+        return new Vector<>(x * Constants.GRAVITY_EARTH, y * Constants.GRAVITY_EARTH, z * Constants.GRAVITY_EARTH);
     }
 
-    public Measure<Double, Acceleration> readX() throws IOException {
+    public double readX() throws IOException {
         return read(REG_DATAX0, CAL_X, SENSITIVITY_X);
     }
 
-    public Measure<Double, Acceleration> readY() throws IOException {
+    public double readY() throws IOException {
         return read(REG_DATAY0, CAL_Y, SENSITIVITY_Y);
     }
 
-    public Measure<Double, Acceleration> readZ() throws IOException {
+    public double readZ() throws IOException {
         return read(REG_DATAZ0, CAL_Z, SENSITIVITY_Z);
     }
 
-    private Measure<Double, Acceleration> read(int reg, double cal, double sensitivity) throws IOException {
+    private double read(int reg, double cal, double sensitivity) throws IOException {
         byte[] data = new byte[2];
         device.read(reg, data, 0, 2);
 
@@ -131,9 +129,7 @@ public class ADXL345 implements Accelerometer {
         bb.order(ByteOrder.LITTLE_ENDIAN);
         bb.put(data);
 
-        double gravity = (bb.getShort(0) + cal) / sensitivity;
-
-        return Measure.valueOf(gravity, NonSI.G);
+        return ((bb.getShort(0) + cal) / sensitivity) * Constants.GRAVITY_EARTH;
     }
 
 }
