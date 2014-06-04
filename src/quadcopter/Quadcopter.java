@@ -1,15 +1,9 @@
 package quadcopter;
 
-import quadcopter.io.devices.L3G4200D;
-import quadcopter.io.i2c.I2CBus;
-import quadcopter.io.i2c.I2CFactory;
-import quadcopter.model.Vector;
-
-import java.io.IOException;
-
 public class Quadcopter {
 
     private static Quadcopter sQuadcopter;
+    private LoopingThread mThread;
 
     public static void main(String[] args) {
         Quadcopter.getInstance().start();
@@ -25,16 +19,17 @@ public class Quadcopter {
     private Quadcopter() {
     }
 
-    public void start() {
+    public synchronized void start() {
+        startMainLoop();
 
-        try {
-            I2CBus bus = I2CFactory.getInstance(I2CBus.BUS_1);
-            L3G4200D lg = new L3G4200D(bus);
-            lg.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+//        try {
+//            I2CBus bus = I2CFactory.getInstance(I2CBus.BUS_1);
+//            L3G4200D lg = new L3G4200D(bus);
+//            lg.start();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
 //        try {
 //            I2CBus bus = I2CFactory.getInstance(I2CBus.BUS_1);
 //            L3G4200D lg = new L3G4200D(bus);
@@ -74,8 +69,49 @@ public class Quadcopter {
     }
 
     public void stop() {
-
-
+        startMainLoop();
     }
 
+    public void loop() {
+        System.out.println("Hello");
+    }
+
+    public void onThrowable(Throwable throwable) {
+        throwable.printStackTrace();
+    }
+
+
+    public LoopingThread getThread() {
+        final LoopingThread thread = new LoopingThread(new Runnable() {
+            @Override
+            public void run() {
+                Quadcopter.getInstance().loop();
+            }
+        }) {
+            @Override
+            public void onThrowable(Throwable throwable) {
+                Quadcopter.getInstance().onThrowable(throwable);
+            }
+        };
+        thread.setPriority(Thread.MAX_PRIORITY);
+        return thread;
+    }
+
+    public synchronized void startMainLoop() {
+        stopMainLoop();
+        mThread = getThread();
+        mThread.start();
+    }
+
+    public synchronized void stopMainLoop() {
+        if (mThread != null) {
+            mThread.cancel();
+            try {
+                mThread.join();
+            } catch (InterruptedException e) {
+                /* ignore */
+            }
+            mThread = null;
+        }
+    }
 }

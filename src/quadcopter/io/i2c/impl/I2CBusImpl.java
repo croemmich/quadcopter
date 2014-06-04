@@ -112,7 +112,7 @@ public class I2CBusImpl implements I2CBus {
      */
     @Override
     public I2CDevice getDevice(int address) throws IOException {
-        return new I2CDeviceImpl(this, address);
+        return new SynchronizedI2CDeviceImpl(this, address);
     }
 
     /**
